@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>山窝沟 Minecraft 服务器</title>
+  <!-- 添加网站图标 -->
+  <link rel="shortcut icon" href="./img/tb.ico" type="image/x-icon">
+  <link rel="icon" href="./img/tb.ico" type="image/x-icon">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind 配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#FF7043', // 主色调 - 橙色
+            secondary: '#E65100', // 辅助色 - 深橙色
+            accent: '#FFA000', // 强调色 - 亮橙色
+            dark: '#2D3748', // 深色
+            light: '#F7FAFC', // 浅色
+            minecraft: {
+              grass: '#79C75B',
+              dirt: '#8B4513',
+              stone: '#778899',
+              wood: '#A67C52',
+              wool: '#FFFFFF',
+              lava: '#FF5252'
+            }
+          },
+          fontFamily: {
+            inter: ['Inter', 'sans-serif'],
+            montserrat: ['Montserrat', 'sans-serif']
+          },
+          backgroundImage: {
+            'minecraft-pattern': "url('./img/6.png')", // 修改为本地路径
+          }
+        },
+      }
+    }
+  </script>
+  
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .text-shadow {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+      .text-shadow-lg {
+        text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
+      }
+      .minecraft-glow {
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+      }
+      .button-glow {
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+      }
+      .block-shadow {
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      }
+      .pixel-border {
+        border: 2px solid #FF7043;
+      }
+      .animate-float {
+        animation: float 6s ease-in-out infinite;
+      }
+      @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+        100% { transform: translateY(0px); }
+      }
+      .animate-pulse-slow {
+        animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
+      .text-group {
+        margin-bottom: 1.25rem;
+      }
+    }
+  </style>
+</head>
+
+<body class="font-inter bg-light text-dark minecraft-pattern scroll-smooth">
+  <!-- 导航栏 -->
+  <header id="navbar" class="fixed w-full z-50 transition-all duration-300">
+    <nav class="bg-dark/80 backdrop-blur-md pixel-border">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex items-center">
+            <a href="#" class="flex items-center space-x-2">
+              <div class="w-10 h-10 bg-primary rounded-md flex items-center justify-center pixel-border">
+                <i class="fa fa-home text-white text-xl"></i>
+              </div>
+              <span class="text-xl font-bold text-white text-shadow">山窝沟服务器</span>
+            </a>
+          </div>
+          
+          <!-- 桌面导航 -->
+          <div class="hidden md:flex items-center space-x-6">
+            <a href="#home" class="text-white hover:text-accent transition-colors duration-300">首页</a>
+            <a href="#server" class="text-white hover:text-accent transition-colors duration-300">服务器介绍</a>
+            <a href="#download" class="text-white hover:text-accent transition-colors duration-300">下载Mod包</a>
+            <a href="https://shanwogou-img.netlify.app" class="text-white hover:text-accent transition-colors duration-300 flex items-center">
+              <i class="fa fa-picture-o mr-1"></i> 服务器图片欣赏
+            </a>
+          </div>
+          
+          <!-- 移动端菜单按钮 -->
+          <div class="md:hidden flex items-center">
+            <button id="menuBtn" class="text-white focus:outline-none">
+              <i class="fa fa-bars text-2xl"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 移动端导航菜单 -->
+      <div id="mobileMenu" class="md:hidden hidden bg-dark/95 pixel-border">
+        <div class="container mx-auto px-4 py-3 space-y-3">
+          <a href="#home" class="block text-white hover:text-accent transition-colors duration-300 py-2">首页</a>
+          <a href="#server" class="block text-white hover:text-accent transition-colors duration-300 py-2">服务器介绍</a>
+          <a href="#download" class="block text-white hover:text-accent transition-colors duration-300 py-2">下载Mod包</a>
+          <a href="https://shanwogou-img.netlify.app" class="block text-white hover:text-accent transition-colors duration-300 py-2 flex items-center">
+            <i class="fa fa-picture-o mr-1"></i> 服务器图片欣赏
+          </a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- 英雄区域 -->
+  <section id="home" class="pt-24 md:pt-0 min-h-screen flex items-center relative overflow-hidden">
+    <div class="absolute inset-0 z-0">
+      <img src="./img/6.png" alt="Minecraft背景" class="w-full h-full object-cover opacity-70">
+      <div class="absolute inset-0 bg-dark/60"></div>
+    </div>
+    
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="max-w-3xl mx-auto text-center">
+        <h1 class="text-[clamp(2.5rem,5vw,4rem)] font-bold text-white text-shadow-lg mb-6 animate-float">
+          欢迎来到山窝沟 Minecraft 服务器
+        </h1>
+        
+        <p class="text-[clamp(1rem,2vw,1.25rem)] text-white text-shadow mb-8 max-w-2xl mx-auto">
+          探索无尽的世界，与朋友一起建造，参与激动人心的冒险！
+        </p>
+        
+        <div class="flex flex-col sm:flex-row justify-center gap-4 mb-12">
+          <a href="#download" class="px-8 py-3 bg-primary hover:bg-primary/90 text-white font-semibold rounded-md transition-all duration-300 transform hover:-translate-y-1 minecraft-glow button-glow pixel-border">
+            下载Mod包
+          </a>
+          <a href="#server" class="px-8 py-3 bg-dark/80 hover:bg-dark text-white font-semibold rounded-md transition-all duration-300 transform hover:-translate-y-1 pixel-border">
+            了解服务器
+          </a>
+        </div>
+        
+        <div class="bg-dark/70 backdrop-blur-md p-6 rounded-lg pixel-border max-w-md mx-auto">
+          <h3 class="text-xl font-bold text-white mb-4 text-center">服务器基本信息</h3>
+          
+          <div class="space-y-3">
+            <div class="flex justify-between items-center">
+              <span class="text-white">游戏版本:</span>
+              <span class="text-accent font-medium">1.20.1</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-white">重庆节点IP:</span>
+              <span class="text-accent font-medium">frp-put.com:60347</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-white">新加坡节点IP:</span>
+              <span class="text-accent font-medium">frp-can.com:15442</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+      <a href="#server" class="text-white text-3xl">
+        <i class="fa fa-angle-down"></i>
+      </a>
+    </div>
+  </section>
+
+  <!-- 服务器介绍区域 -->
+  <section id="server" class="py-20 bg-light">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-dark mb-4">
+          服务器介绍
+        </h2>
+        
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+          探索我们精心打造的Minecraft世界，这里有无限的可能等待着你！
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+        <div class="order-2 md:order-1">
+          <h3 class="text-xl font-bold text-primary mb-4">
+            特色玩法
+          </h3>
+          
+          <ul class="space-y-3 mb-6">
+            <li class="flex items-start">
+              <i class="fa fa-check text-accent mt-1 mr-3"></i>
+              <span>大型MTR服务器，定期更新Mod</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fa fa-check text-accent mt-1 mr-3"></i>
+              <span>有末地交通</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fa fa-check text-accent mt-1 mr-3"></i>
+              <span>有地狱交通</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fa fa-check text-accent mt-1 mr-3"></i>
+              <span>可以根据自己的电脑配置加入光影</span>
+            </li>
+          </ul>
+          
+          <h3 class="text-xl font-bold text-primary mb-4">
+            为什么选择我们？
+          </h3>
+          
+          <p class="text-gray-700 mb-6">
+            我们的服务器拥有活跃的社区、友好的管理团队和丰富的游戏内容。无论你是建筑大师、生存专家还是探险爱好者，都能在这里找到属于自己的乐趣。
+          </p>
+          
+          <a href="#download" class="inline-block px-6 py-2 bg-primary hover:bg-primary/90 text-white font-semibold rounded-md transition-all duration-300 transform hover:-translate-y-1 button-glow">
+            立即加入我们
+          </a>
+        </div>
+        
+        <div class="order-1 md:order-2 relative">
+          <div class="rounded-lg overflow-hidden shadow-xl pixel-border block-shadow">
+            <!-- 修改图片为本地文件 -->
+            <img src="./img/6.png" alt="Minecraft服务器截图" class="w-full h-auto">
+          </div>
+          <div class="absolute -bottom-6 -left-6 bg-accent text-white p-4 rounded-md pixel-border block-shadow z-10 hidden md:block">
+            <p class="font-bold">游戏版本: 1.20.1</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mod包下载区域 -->
+  <section id="download" class="py-20 bg-light">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-dark mb-4">
+          下载Mod包
+        </h2>
+        
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+          下载我们的专用Mod包，获得最佳游戏体验
+        </p>
+      </div>
+      
+      <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-lg shadow-xl p-8 md:p-12 pixel-border relative overflow-hidden">
+          <!-- 装饰元素 -->
+          <div class="absolute -top-10 -right-10 w-40 h-40 bg-accent/10 rounded-full"></div>
+          <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-primary/10 rounded-full"></div>
+          
+          <div class="text-center mb-8 relative z-10">
+            <div class="w-20 h-20 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-4 pixel-border">
+              <i class="fa fa-download text-3xl text-accent"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-dark mb-2">
+              Shanwogou Mod Pack
+            </h3>
+            <p class="text-gray-600">Version: 1.0.0 fabric(1.20.1)</p>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 relative z-10">
+            <div class="bg-gray-50 p-6 rounded-lg pixel-border">
+              <h4 class="text-xl font-semibold text-primary mb-3 flex items-center">
+                <i class="fa fa-check-circle mr-2 text-accent"></i> 为什么需要Mod包?
+              </h4>
+              
+              <ul class="space-y-2 text-gray-700">
+                <li class="flex items-start">
+                  <i class="fa fa-check text-accent mt-1 mr-2"></i>
+                  <span>包含服务器所需的所有Mod</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fa fa-check text-accent mt-1 mr-2"></i>
+                  <span>优化游戏性能与体验</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fa fa-check text-accent mt-1 mr-2"></i>
+                  <span>确保与服务器功能兼容</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fa fa-check text-accent mt-1 mr-2"></i>
+                  <span>一键安装，方便快捷</span>
+                </li>
+              </ul>
+            </div>
+            
+            <div class="bg-gray-50 p-6 rounded-lg pixel-border">
+              <h4 class="text-xl font-semibold text-primary mb-3 flex items-center">
+                <i class="fa fa-cubes mr-2 text-accent"></i> 主要Mod列表
+              </h4>
+              
+              <ul class="space-y-2 text-gray-700">
+                <li class="flex items-start">
+                  <i class="fa fa-puzzle-piece text-accent mt-1 mr-2"></i>
+                  <span>OptiFine - 优化游戏性能</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fa fa-puzzle-piece text-accent mt-1 mr-2"></i>
+                  <span>Xaero's world map - 地图与导航</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fa fa-puzzle-piece text-accent mt-1 mr-2"></i>
+                  <span>Waystones - 快速旅行</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fa fa-puzzle-piece text-accent mt-1 mr-2"></i>
+                  <span>MoreBlocks - 更多建筑方块</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="text-center relative z-10">
+            <a href="./swg.mrpack" id="modPackDownload" class="inline-block px-10 py-4 bg-accent hover:bg-accent/90 text-white font-bold rounded-md transition-all duration-300 transform hover:-translate-y-1 minecraft-glow button-glow pixel-border">
+              <i class="fa fa-download mr-2"></i> 下载Mod包 (ShanWoGou Mod Pack.mrpack)
+            </a>
+            <p class="text-gray-600 mt-4">文件大小: 993MB | 推荐使用Pcl启动器</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="bg-dark text-white py-12">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <div class="flex items-center space-x-2 mb-4">
+            <div class="w-10 h-10 bg-primary rounded-md flex items-center justify-center pixel-border">
+              <i class="fa fa-home text-white text-xl"></i>
+            </div>
+            <span class="text-xl font-bold text-white">山窝沟服务器</span>
+          </div>
+          <p class="text-gray-400 mb-4">
+            打造最好的Minecraft生存体验，与朋友们一起探索、建造和冒险。
+          </p>
+          
+          <div class="flex space-x-4 mt-6">
+            <a href="https://discord.gg/VabU2zDgvE" class="text-gray-400 hover:text-white transition-colors duration-300">
+              <i class="fa fa-discord text-xl"></i>
+            </a>
+            <a href="https://qm.qq.com/q/Xsl24aHrSU" target="_blank" class="text-gray-400 hover:text-white transition-colors duration-300">
+              <i class="fa fa-qq text-xl"></i>
+            </a>
+            <a href="https://www.youtube.com/watch?v=16HpYn0zR8E" target="_blank" class="text-gray-400 hover:text-white transition-colors duration-300">
+              <i class="fa fa-youtube-play text-xl"></i>
+            </a>
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-semibold mb-3 border-b border-gray-700 pb-2">
+            快速链接
+          </h4>
+          
+          <ul class="space-y-2 mt-2">
+            <li><a href="#home" class="text-gray-400 hover:text-white transition-colors duration-300">首页</a></li>
+            <li><a href="#server" class="text-gray-400 hover:text-white transition-colors duration-300">服务器介绍</a></li>
+            <li><a href="#download" class="text-gray-400 hover:text-white transition-colors duration-300">下载Mod包</a></li>
+            <li><a href="https://shanwogou-img.netlify.app" class="text-gray-400 hover:text-white transition-colors duration-300">服务器图片欣赏</a></li>
+            <li><a href="https://discord.gg/VabU2zDgvE" class="text-gray-400 hover:text-white transition-colors duration-300">加入Discord</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-semibold mb-3 border-b border-gray-700 pb-2">
+            服务器信息
+          </h4>
+          
+          <ul class="space-y-2 mt-2">
+            <li class="flex justify-between">
+              <span class="text-gray-400">游戏版本:</span>
+              <span class="text-white">1.20.1</span>
+            </li>
+            <li class="flex justify-between">
+              <span class="text-gray-400">重庆节点:</span>
+              <span class="text-white">frp-put.com:60347</span>
+            </li>
+            <li class="flex justify-between">
+              <span class="text-gray-400">新加坡节点:</span>
+              <span class="text-white">frp-can.com:15442</span>
+            </li>
+            <li class="flex justify-between">
+              <span class="text-gray-400">Mod包版本:</span>
+              <span class="text-white">1.0.0</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-500">
+        <p>&copy; 2025 山窝沟 Minecraft 服务器. 保留所有权利.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // DOM元素
+    const navbar = document.getElementById('navbar');
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const modPackDownload = document.getElementById('modPackDownload');
+    
+    // 导航栏滚动效果
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        navbar.classList.add('bg-dark/95');
+        navbar.classList.remove('bg-dark/80');
+      } else {
+        navbar.classList.add('bg-dark/80');
+        navbar.classList.remove('bg-dark/95');
+      }
+    });
+    
+    // 移动端菜单切换
+    menuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+      // 切换图标
+      const icon = menuBtn.querySelector('i');
+      if (icon.classList.contains('fa-bars')) {
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+      } else {
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+      }
+    });
+    
+    // 平滑滚动
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        
+        // 关闭移动菜单
+        if (!mobileMenu.classList.contains('hidden')) {
+          mobileMenu.classList.add('hidden');
+          const icon = menuBtn.querySelector('i');
+          icon.classList.remove('fa-times');
+          icon.classList.add('fa-bars');
+        }
+        
+        const targetId = this.getAttribute('href');
+        const targetElement = document.querySelector(targetId);
+        
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 80,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+    
+    // 下载按钮动画效果
+    modPackDownload.addEventListener('click', function() {
+      this.classList.add('animate-pulse-slow');
+      setTimeout(() => {
+        this.classList.remove('animate-pulse-slow');
+      }, 2000);
+    });
+    
+    // 模拟下载功能
+    modPackDownload.addEventListener('click', function(e) {
+      // e.preventDefault(); // 取消这行，允许真实下载
+      // alert('开始下载Mod包...'); // 移除这行
+      // 实际项目中这里应该有真实的下载链接
+      // 现在链接已经指向真实文件 ./swg.mrpack
+    });
+  </script>
+</body>
+</html>
